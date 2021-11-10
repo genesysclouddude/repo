@@ -46,7 +46,7 @@
                     socket.onmessage = onSocketMessage;
 
                     // Subscribe to conversation events in the queue.
-                    let topic = [{"id": "v2.routing.queues.be4b6938-0803-4a7d-ad5b-7a2177a052eb.conversations"}];
+                    let topic = [{"id": "v2.routing.queues.401c2864-1b70-4095-8032-fcaf437e07f3.conversations"}];
                     return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
                 }).catch((err) => {
                     // Handle failure response
@@ -64,8 +64,8 @@
                 console.log("Notification: Body = " + eventBody);
 
 				// Add a Bomb to the Game
-				if ( topic == "v2.routing.queues.be4b6938-0803-4a7d-ad5b-7a2177a052eb.conversations" ) {
-	                console.log("Notification");
+				if ( topic == "v2.routing.queues.401c2864-1b70-4095-8032-fcaf437e07f3.conversations" ) {
+	                console.log("Notification: Event");
 	            }
             };
     </script>    
