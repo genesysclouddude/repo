@@ -31,8 +31,6 @@
                 })
                 .then((userMe) => {
                 	// Me Response
-                	
-                    document.querySelector("#welcome").innerHTML = "Welcome " + userMe.name;
 
                     console.log("Hello, ${userMe.name}!");
 
@@ -63,8 +61,8 @@
                 console.log("Notification: Topic = " + topic);
                 console.log("Notification: Body = " + eventBody);
 
-				// Add a Bomb to the Game
-				if ( topic == "v2.routing.queues.401c2864-1b70-4095-8032-fcaf437e07f3.conversations" ) {
+			// Add a Bomb to the Game
+			if ( topic == "v2.routing.queues.401c2864-1b70-4095-8032-fcaf437e07f3.conversations" ) {
 	                console.log("Notification: Event");
 	            }
             };
