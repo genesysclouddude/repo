@@ -1,84 +1,221 @@
 <!DOCTYPE html>
-
 <html>
-<body>
+    <head>
+        <title>Collaborate Toast Demo</title>
 
-<script src="https://sdk-cdn.mypurecloud.com/client-apps/2.2.0/purecloud-client-app-sdk.js"></script>
-<script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.0.0/purecloud-client-app-sdk-e9989de7.min.js"></script>
 
-<script>
-	
-	let ClientApp = require('purecloud-client-app-sdk');
-	let myClientApp = new ClientApp({
-    		pcEnvironmentQueryParam: 'pcEnvironment'
-	});
+        <style>
+            body {
+                margin-left: 20px;
+            }
 
-	myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
-	
-            // PureCloud OAuth information
-            var platformClient = require('platformClient');
-            var client = platformClient.ApiClient.instance;
-            var clientId = '3c7698a5-5432-467a-933a-cbc33614d76b';
-            var redirectUri = 'https://genesysclouddude.github.io/repo/test.html';
-            var state = "Test";
-            
-            // API instances
-            var usersApi = new platformClient.UsersApi();
-            var notificationsApi = new platformClient.NotificationsApi();
+            .msg-group {
+                position: relative;
+            }
 
-			// Perform Implicit Grant Authentication
-            client.loginImplicitGrant(clientId, redirectUri, { state: state })
-                .then((data) => {
-                	// User Authenticated
-                	
-                    console.log("Authenticated: " + data);
+            .msg-group .checkbox {
+                position: absolute;
+                height: 1em;
+                font-size: 1em;
+                right: 15px;
+            }
 
-                    // Make request to GET /api/v2/users/me?expand=presence
-                    return usersApi.getUsersMe({ 'expand': ["presence"] });
-                })
-                .then((userMe) => {
-                	// Me Response
+            @media (max-width: 768px) {
+                .msg-group .checkbox {
+                    top: -20px;
+                    right: 15px;
+                    padding: 0;
+                }
+            }
 
-                    console.log("Hello, ${userMe.name}!");
+            @media (min-width: 768px) {
+                .msg-group .checkbox {
+                    bottom: 0;
+                    margin-left: 15px;
+                    padding-top: 0;
+                }
+            }
 
-                    // Create a Notifications Channel
-                    return notificationsApi.postNotificationsChannels();
-                }).then((channel) => {
-                	// Channel Created
-                	
-                	// Setup WebSocket on Channel
-                    var socket = new WebSocket(channel.connectUri);
-                    socket.onmessage = onSocketMessage;
+            fieldset {
+                margin-top: 30px;
+            }
+        </style>
+    </head>
 
-                    // Subscribe to conversation events in the queue.
-                    let topic = [{"id": "v2.routing.queues.401c2864-1b70-4095-8032-fcaf437e07f3.conversations"}];
-                    return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
-                }).catch((err) => {
-                    // Handle failure response
-                    console.log(err);
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <h1>Send a Toast</h1>
+
+        <form class="form-horizontal container-fluid">
+            <div class="form-group">
+                <label for="title" class="col-sm-1 control-label">Title</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="title" placeholder="Message Title">
+                </div>
+            </div>
+            <div class="form-group msg-group">
+                <label for="message" class="col-sm-1 control-label">Message</label>
+                <div class="col-sm-11">
+                    <textarea name="textarea" rows="3" class="form-control" id="message" placeholder="Message Text"></textarea>
+                    <div class="help-block">
+                        <p>
+                            <span class="label label-info">Note:</span>
+                            Supports Emoticons, Unicode Emojis, and Emoji Shortcodes
+                        </p>
+                    </div>
+                    <div class="checkbox">
+                        <label title="Interpret Message Text as Markdown" aria-label="Interpret Message Text as Markdown">
+                            <input type="checkbox" id="markdownMessage" checked="true" tabindex="1"> Markdown
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="type" class="col-sm-1 control-label">Type</label>
+                <div class="col-sm-11">
+                    <select class="form-control" id="toastType">
+                        <option value="info" selected="true">Info</option>
+                        <option value="success">Success</option>
+                        <option value="error">Error</option>
+                    </select>
+                </div>
+            </div>
+            <fieldset>
+                <legend>More Options:</legend>
+                <div class="form-group">
+                    <label for="msgId" class="col-sm-1 control-label">ID</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="msgId" placeholder="Message ID">
+                        <div class="help-block">
+                            <p>
+                                <span class="label label-info">Note:</span>
+                                Messages with same ID are replaced
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="timeout" class="col-sm-1 control-label">Timeout</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" id="timeout" min="0" value="5"></input>
+                        <div class="help-block">
+                            <p><span class="label label-info">Note:</span> Set to 0 for no timeout</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input id="showCloseButton" type="checkbox"> Show Close Button
+                            </label>
+                        </div>
+                        <div class="help-block">
+                            <p>
+                                <span class="label label-danger">Required:</span>
+                                Failure Toasts and no timeouts
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <button type="submit" class="btn btn-primary send-toast">Send Toast</button>
+                </div>
+            </div>
+        </form>
+
+        <h1>Request Attention</h1>
+        <div class="attention-controls">
+            <button class="btn btn-primary increase-attn-btn">Increase Attention Count</button>
+            <button class="btn btn-primary clear-attn-btn">Clear Attention Count</button>
+        </div>
+
+        <script>$(function () {
+                let myClientApp = null;
+
+                // Note: This manual check for query string is for backwards compatibility of this
+                // deployed example.  In your own apps, you can assume the query param will be
+                // provided by Genesys Cloud if you have configured it in your app's config.
+                let envQueryParamName = 'pcEnvironment';
+                if (window && window.location && typeof window.location.search === 'string' &&
+                    window.location.search.indexOf(envQueryParamName) >= 0) {
+                    myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
+                } else {
+                    // Use default Genesys Cloud region
+                    myClientApp = new window.purecloud.apps.ClientApp();
+                }
+
+                // Toast
+                var $titleField = $('input#title');
+                var $msgField = $('textarea#message');
+
+                function canSubmitForm () {
+                    return !!($titleField.val() && $msgField.val());
+                }
+
+                function setFormSubmissionState() {
+                    $('button.send-toast').prop('disabled', !canSubmitForm());
+                }
+
+                $titleField.on('input change', setFormSubmissionState);
+                $msgField.on('input change', setFormSubmissionState);
+
+                $('form').submit(function (e) {
+                    e.preventDefault();
+
+                    if (canSubmitForm() === false) {
+                        return false;
+                    }
+
+                    var options = {
+                        id: $('#msgId').val(),
+                        type: $('#toastType').val(),
+                        markdownMessage: ($('#markdownMessage').is(":checked")),
+                        showCloseButton: ($('#showCloseButton').is(":checked"))
+                    };
+
+                    var timeoutStr = $('#timeout').val();
+                    var timeoutInt = parseInt(timeoutStr, 10);
+                    if (timeoutInt == timeoutStr) {
+                        options.timeout = timeoutInt;
+                    }
+
+                    myClientApp.alerting.showToastPopup($titleField.val(), $msgField.val(), options);
+                    $titleField.val('');
+                    $msgField.val('');
+                    setFormSubmissionState();
                 });
 
-            // Handler for every Websocket message
-            function onSocketMessage(event){
-            	console.log("WebSocket Event Received: " + event.data);
-                let data = JSON.parse(event.data);
-                let topic = data.topicName;
-                let eventBody = data.eventBody;
+                setFormSubmissionState();
+                $titleField.focus();
 
-                console.log("Notification: Topic = " + topic);
-                console.log("Notification: Body = " + eventBody);
+                // Attention
+                var count = 0;
+                var $increaseBtn = $('.increase-attn-btn');
+                var $clearBtn = $('.clear-attn-btn');
 
-			// Add a Bomb to the Game
-			if ( topic == "v2.routing.queues.401c2864-1b70-4095-8032-fcaf437e07f3.conversations" ) {
-	                console.log("Notification: Event");
-	            }
-            };
-    </script>    
+                $increaseBtn.on('click', incrementCount);
+                $clearBtn.on('click', clearCount);
 
+                function incrementCount () {
+                    ++count;
+                    myClientApp.alerting.setAttentionCount(count);
+                }
 
-<h1>My First Heading</h1>
-
-<p> Hello ${userMe.name}</p>
-
-</body>
+                function clearCount () {
+                    count = 0;
+                    myClientApp.alerting.setAttentionCount(0);
+                }
+            });
+        </script>
+    </body>
 </html>
