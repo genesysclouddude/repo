@@ -14,18 +14,16 @@
            console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
 
 	// Create instance of Client App SDK
-           let myClientApp = new window.purecloud.apps.ClientApp();
+           	let myClientApp1 = new window.purecloud.apps.ClientApp();       
 
-	// Log the PureCloud environment (i.e. AWS Region)
-           console.log("PureCloud Environment: " + myClientApp.pcEnvironment);
-</script>
-	
-<script>
-	let ClientApp = require('purecloud-client-app-sdk');
-	let myClientApp = new ClientApp({
+		let ClientApp = require('purecloud-client-app-sdk');
+		let myClientApp = new ClientApp({
     		pcEnvironmentQueryParam: 'pcEnvironment'
 	});
-
+	
+	// Log the PureCloud environment (i.e. AWS Region)
+	console.log("PureCloud Environment: " + myClientApp.pcEnvironment);
+	
 	myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
 </script>
 	
