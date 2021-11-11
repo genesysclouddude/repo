@@ -9,17 +9,13 @@
         <script src="utils/oauth.js"></script>
 </head>
 
-
 <script>
-    // Note: You may need to use another event (e.g. load ) depending on how you load the script.
-    document.addEventListener('DOMContentLoaded', function () {
-        var ClientApp = window.purecloud.apps.ClientApp;
-        var myClientApp = new ClientApp({
-            pcEnvironmentQueryParam: 'pcEnvironment'
-        });
+	let ClientApp = require('purecloud-client-app-sdk');
+	let myClientApp = new ClientApp({
+    		pcEnvironmentQueryParam: 'pcEnvironment'
+	});
 
-        myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
-    });
+	myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
 </script>
 	
 <body>
