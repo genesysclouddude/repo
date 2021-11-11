@@ -13,7 +13,7 @@
 	console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
         console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
 
-	let ClientApp = require('purecloud-client-app-sdk');
+	import ClientApp from 'purecloud-client-app-sdk';
 	let myClientApp = new ClientApp({
     		pcEnvironmentQueryParam: 'pcEnvironment'
 	});
