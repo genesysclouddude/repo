@@ -12,11 +12,15 @@
 	// Log Version and About using static properties
 	console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
         console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
-
-
 	
+	// Create instance of Client App SDK
+        let myClientApp = new window.purecloud.apps.ClientApp({
+            pcEnvironmentQueryParam: 'pcEnvironment'
+        });
+
 	// Log the PureCloud environment (i.e. AWS Region)
-	console.log("GenesysCloud Environment: " + myClientApp.pcEnvironment);
+        console.log("PureCloud Environment: " + myClientApp.pcEnvironment);
+
 	
 	myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
 </script>
