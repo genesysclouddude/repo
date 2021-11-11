@@ -5,9 +5,16 @@
 
 <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.2.0/purecloud-client-app-sdk.js"></script>
 <script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
-	
-<script>
 
+<script>
+	
+	let ClientApp = require('purecloud-client-app-sdk');
+	let myClientApp = new ClientApp({
+    		pcEnvironmentQueryParam: 'pcEnvironment'
+	});
+
+	myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
+	
             // PureCloud OAuth information
             var platformClient = require('platformClient');
             var client = platformClient.ApiClient.instance;
