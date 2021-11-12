@@ -30,9 +30,9 @@
 				  })
 				  .then((userMe) => {
 					// Handle successful result
-					var name = ${userMe.name}
+					var name = `${userMe.name}`;
 					console.log(`Hello, ${userMe.name}!`);
-					console.log(`Hello, ${userMe.email}!`);
+					console.log(`Hello, ${userMe.email}`);
 				  })
 				  .catch((err) => {
 					// Handle failure response
