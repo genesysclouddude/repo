@@ -6,13 +6,13 @@
 <head>
 	<script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
         <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.2.0/purecloud-client-app-sdk.js"></script>
+	<script src='//code.jquery.com/jquery-1.11.2.min.js'></script>
 </head>
 
 <script>
 	// Log Version and About using static properties
 	console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
         console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
-	
 	// Create instance of Client App SDK
         var myClientApp = new window.purecloud.apps.ClientApp({
             pcEnvironmentQueryParam: 'pcEnvironment'
@@ -20,32 +20,49 @@
 
 	// Log the PureCloud environment (i.e. AWS Region)
         console.log("PureCloud Environment: " + myClientApp.pcEnvironment);
-
 	
-	// PureCloud OAuth information
-        var platformClient = require('platformClient');
-        var client = platformClient.ApiClient.instance;
-        var clientId = '3c7698a5-5432-467a-933a-cbc33614d76b';
-        var redirectUri = 'https://genesysclouddude.github.io/repo/test.html';
-        var state = "Test";
-            
-        // API instances
-        var usersApi = new platformClient.UsersApi();
-        var notificationsApi = new platformClient.NotificationsApi();
+   
 
-	// Perform Implicit Grant Authentication
-        client.loginImplicitGrant(clientId, redirectUri, { state: state })
-                .then((data) => {
-                	// User Authenticated
-                	
-                    console.log("Authenticated: " + data);
+    // Implicit grant credentials
+    const CLIENT_ID = '3c7698a5-5432-467a-933a-cbc33614d76b';
 
-                    // Make request to GET /api/v2/users/me?expand=presence
-                    return usersApi.getUsersMe({ 'expand': ["presence"] });
-                });
-	
-	//myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
-</script>
+    // Genesys Cloud environment
+    const ENVIRONMENT = 'mypurecloud.de';
+    
+    
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\#&]" + name + "=([^&#]*)"),
+          results = regex.exec(location.hash);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    if(window.location.hash) {
+        console.log(location.hash);
+        var token = getParameterByName('access_token');
+
+        $.ajax({
+            url: `https://api.${ENVIRONMENT}/api/v2/users/me`,
+            type: "GET",
+            beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'bearer ' + token);},
+            success: function(data) {
+                console.log(data);
+            }
+        });
+
+        location.hash=''
+
+    } else {
+        var queryStringData = {
+            response_type : "token",
+            client_id : CLIENT_ID,
+            redirect_uri : "http://localhost:8085/oauth2/callback"
+        }
+
+        window.location.replace(`https://login.${ENVIRONMENT}/oauth/authorize?` + jQuery.param(queryStringData));
+    }
+    </script>
+
 	
 <body>
 	<h1>My First Heading</h1>
