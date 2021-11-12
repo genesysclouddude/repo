@@ -3,76 +3,46 @@
 <html>
 <body>
 
-<script src="https://sdk-cdn.mypurecloud.com/client-apps/2.2.0/purecloud-client-app-sdk.js"></script>
-<script src="https://sdk-cdn.mypurecloud.com/javascript/125.0.0/purecloud-platform-client-v2.min.js"></script>
+
+<script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
+
+<script src="https://sdk-cdn.mypurecloud.com/client-apps/2.0.0/purecloud-client-app-sdk-e9989de7.min.js"></script>
 
 <script>
             // PureCloud OAuth information
-	    var platformClient = require('platformClient');
+		
+			var platformClient = require('platformClient');
             var client = platformClient.ApiClient.instance;
-	    client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
+			client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
             var clientId = '3c7698a5-5432-467a-933a-cbc33614d76b';
             var redirectUri = 'https://genesysclouddude.github.io/repo/test.html';
             var state = "XXX";
-            
-            // API instances
-            var usersApi = new platformClient.UsersApi();
-            var notificationsApi = new platformClient.NotificationsApi();
-	    
-	// Perform Implicit Grant Authentication
-        client.loginImplicitGrant(clientId, redirectUri, { state: state })
-                .then((data) => {
-                	// User Authenticated
-                	
-                    console.log("Authenticated: " + JSON.stringify(data));
 
-                    // Make request to GET /api/v2/users/me?expand=presence
-                    return usersApi.getUsersMe({ 'expand': ["presence"] });
-                })
-                .then((userMe) => {
-                	// Me Response
-              
+			// Create API instance
+			const usersApi = new platformClient.UsersApi();
 
-                    console.log("Hello, ${userMe.name}!");
-
-                    // Create a Notifications Channel
-                    return notificationsApi.postNotificationsChannels();
-                }).then((channel) => {
-                	// Channel Created
-                	
-                	// Setup WebSocket on Channel
-                    var socket = new WebSocket(channel.connectUri);
-                    socket.onmessage = onSocketMessage;
-
-                    // Subscribe to conversation events in the queue.
-                    let topic = [{"id": "v2.routing.queues.be4b6938-0803-4a7d-ad5b-7a2177a052eb.conversations"}];
-                    return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
-                }).catch((err) => {
-                    // Handle failure response
-                    console.log(err);
-                });
-
-            // Handler for every Websocket message
-            function onSocketMessage(event){
-            	console.log("WebSocket Event Received: " + event.data);
-                let data = JSON.parse(event.data);
-                let topic = data.topicName;
-                let eventBody = data.eventBody;
-
-                console.log("Notification: Topic = " + topic);
-                console.log("Notification: Body = " + eventBody);
-
-				// Add a Bomb to the Game
-				if ( topic == "v2.routing.queues.be4b6938-0803-4a7d-ad5b-7a2177a052eb.conversations" ) {
-	                console.log("Notification");
-	            }
-            };
+			// Authenticate
+			client.loginImplicitGrant(clientId, redirectUri)
+				.then(() => {
+				
+			// Make request to GET /api/v2/users/me?expand=presence
+			return usersApi.getUsersMe({ 'expand': ["presence"] });
+				  })
+				  .then((userMe) => {
+					// Handle successful result
+					console.log(`Hello, ${userMe.name}!`);
+				  })
+				  .catch((err) => {
+					// Handle failure response
+					console.log(err);
+				  });
+        
     </script>    
 
 
 <h1>My First Heading</h1>
 
-<p>My first paragraph.</p>
+<p>My first paragraph. `Hello, ${userMe.name}!`</p>
 
 </body>
 </html>
