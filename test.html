@@ -1,65 +1,89 @@
 <!DOCTYPE html>
 
 <html>
-	
+<body>
 
-<head>
-	<script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.2.0/purecloud-client-app-sdk.js"></script>
-	<script src='//code.jquery.com/jquery-1.11.2.min.js'></script>
-</head>
+<script src="https://sdk-cdn.mypurecloud.com/client-apps/2.2.0/purecloud-client-app-sdk.js"></script>
+<!-- Include the CJS SDK -->
+<script src="https://sdk-cdn.mypurecloud.com/javascript/125.0.0/purecloud-platform-client-v2.min.js"></script>
 
 <script>
-	// Log Version and About using static properties
-	console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
-        console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
+            // PureCloud OAuth information
+            var platformClient = require('platformClient');
+            var client = platformClient.ApiClient.instance;
+            var clientId = '3c7698a5-5432-467a-933a-cbc33614d76b';
+            var redirectUri = 'https://genesysclouddude.github.io/repo/test.html';
+            var state = "XXX";
+            
+            // API instances
+            var usersApi = new platformClient.UsersApi();
+            var notificationsApi = new platformClient.NotificationsApi();
+	    
+	    // Read Environment
+	    var ClientApp = require('purecloud-client-app-sdk');
+	    var myClientApp = new ClientApp({
+			pcEnvironmentQueryParam: 'pcEnvironment'
+	    });	
+	    console.log("AWS Region: " + myClientApp.pcEnvironment);
 
-   
-
-    // Implicit grant credentials
-    const CLIENT_ID = '3c7698a5-5432-467a-933a-cbc33614d76b';
-
-    // Genesys Cloud environment
-    const ENVIRONMENT = 'mypurecloud.de';
-    
-    
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\#&]" + name + "=([^&#]*)"),
-          results = regex.exec(location.hash);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-
-    if(window.location.hash) {
-        console.log(location.hash);
-        var token = getParameterByName('access_token');
-
-        $.ajax({
-            url: `https://api.${ENVIRONMENT}/api/v2/users/me`,
-            type: "GET",
-            beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'bearer ' + token);},
-            success: function(data) {
-                console.log(data);
-            }
-        });
-
-        location.hash=''
-
-    } else {
-        var queryStringData = {
-            response_type : "token",
-            client_id : CLIENT_ID,
-            redirect_uri : "https://genesysclouddude.github.io/repo/test.html"
-        }
-
-        window.location.replace(`https://login.${ENVIRONMENT}/oauth/authorize?` + jQuery.param(queryStringData));
-    }
-	console.log("Init done!: ");
-    </script>
 
 	
-<body>
-	<h1>My First Heading</h1>
-	<p>My first paragraph.</p>
+
+			// Perform Implicit Grant Authentication
+            client.loginImplicitGrant(clientId, redirectUri, { state: state })
+                .then((data) => {
+                	// User Authenticated
+                	
+                    console.log("Authenticated: " + data);
+
+                    // Make request to GET /api/v2/users/me?expand=presence
+                    return usersApi.getUsersMe({ 'expand': ["presence"] });
+                })
+                .then((userMe) => {
+                	// Me Response
+              
+
+                    console.log("Hello, ${userMe.name}!");
+
+                    // Create a Notifications Channel
+                    return notificationsApi.postNotificationsChannels();
+                }).then((channel) => {
+                	// Channel Created
+                	
+                	// Setup WebSocket on Channel
+                    var socket = new WebSocket(channel.connectUri);
+                    socket.onmessage = onSocketMessage;
+
+                    // Subscribe to conversation events in the queue.
+                    let topic = [{"id": "v2.routing.queues.be4b6938-0803-4a7d-ad5b-7a2177a052eb.conversations"}];
+                    return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+                }).catch((err) => {
+                    // Handle failure response
+                    console.log(err);
+                });
+
+            // Handler for every Websocket message
+            function onSocketMessage(event){
+            	console.log("WebSocket Event Received: " + event.data);
+                let data = JSON.parse(event.data);
+                let topic = data.topicName;
+                let eventBody = data.eventBody;
+
+                console.log("Notification: Topic = " + topic);
+                console.log("Notification: Body = " + eventBody);
+
+				// Add a Bomb to the Game
+				if ( topic == "v2.routing.queues.be4b6938-0803-4a7d-ad5b-7a2177a052eb.conversations" ) {
+	                console.log("Notification");
+	            }
+            };
+        });
+    </script>    
+
+
+<h1>My First Heading</h1>
+
+<p>My first paragraph.</p>
+
 </body>
 </html>
