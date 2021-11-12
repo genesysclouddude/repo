@@ -30,9 +30,10 @@
 				  })
 				  .then((userMe) => {
 					// Handle successful result
-					var name = `${userMe.name}`;
-					console.log(`Hello, ${userMe.name}!`);
-					console.log(`Hello, ${userMe.email}`);
+					var name = ${userMe.name};
+					console.log(`User name: ${userMe.name}!`);
+					console.log(`User email: ${userMe.email}`);
+					console.log(`User presence: ${userMe.presence.name}`);
 				  })
 				  .catch((err) => {
 					// Handle failure response
@@ -44,9 +45,6 @@
 
 <h1>My First Heading</h1>
 
-	<script> 
-		document.write(name);
-	</script> 
 
 </body>
 </html>
