@@ -32,7 +32,7 @@
 					// Handle successful result
 					console.log(`User name: ${userMe.name}!`);
 					console.log(`User email: ${userMe.email}`);
-					console.log(`User presence: ${userMe.presence.name}`);
+					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
 				  })
 				  .catch((err) => {
 					// Handle failure response
