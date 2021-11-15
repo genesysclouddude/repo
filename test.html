@@ -29,14 +29,14 @@
 					console.log(`User name: ${userMe.name}!`);
 					console.log(`User email: ${userMe.email}`);
 					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
-	
+					var agents = userMe.presence.presenceDefinition.systemPresence;
 				  })
 				  .catch((err) => {
 					// Handle failure response
 					console.log(err);
 				  });
 
-	var agents = userMe.presence.presenceDefinition.systemPresence;
+	
 </script>    
 
 
