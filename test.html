@@ -37,13 +37,13 @@
 				  
 				  
 			// Make request to GET /api/v2/users/me?expand=presence
-					var users = new platformClient.UsersApi();
+
 					console.log("getting ME");
-					users.getUsersMe().then(function(userObject){
+					usersApi.getUsersMe().then(function(userObject){
 						console.log("got me");
 						console.log(userObject);
 						console.log("done");
-});
+					});
         
     </script>    
 
@@ -54,7 +54,7 @@
 <p id="demo"></p>
 
 <script>
-document.getElementById("demo").innerHTML = users.getUsersMe();
+document.getElementById("demo").innerHTML = userMe.presence.presenceDefinition.systemPresence;
 </script>
 
 <button type="button" onclick="">Create IXN</button>
