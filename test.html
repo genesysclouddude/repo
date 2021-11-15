@@ -9,8 +9,9 @@
 		var users = new platformClient.UsersApi();
 			users.getUsersMe({ 'expand': ["presence"] }).then(function(userObject){
 				alert("Mein Status: "+userObject.presence.presenceDefinition.systemPresence);
+				document.getElementById("demo").innerHTML = userObject.presence.presenceDefinition.systemPresence;
 			});
-		} 
+		}  
 	
 	// PureCloud OAuth information
 		
