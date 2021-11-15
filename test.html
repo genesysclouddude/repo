@@ -27,7 +27,7 @@
 		const usersApi = new platformClient.UsersApi();
 		
 		// Make request to GET /api/v2/users/me?expand=presence
-		users.getUsersMe({ 'expand': ["presence"] }).then(function(userObject){
+		usersApi.getUsersMe({ 'expand': ["presence"] }).then(function(userObject){
 				document.getElementById("demo").innerHTML = userObject.presence.presenceDefinition.systemPresence;
 		});
 	
