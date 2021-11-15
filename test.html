@@ -6,12 +6,9 @@
 
 <script>
         function MyStatus() {
-		var users = new platformClient.UsersApi();
-		users.getUsersMe({ 'expand': ["presence"] }).then(function(userObject){
-		var test = userObject.presence.presenceDefinition.systemPresence;
-    		console.log(test);
+		var test = 'Hallo';
   		alert("Mein Status: "+test);
-	}}    
+	}    
 	
 	// PureCloud OAuth information
 		
@@ -20,7 +17,7 @@
 			client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
             var clientId = '3c7698a5-5432-467a-933a-cbc33614d76b';
             var redirectUri = 'https://genesysclouddude.github.io/repo/test.html';
-            var state = "XXX";
+            var state = 'XXX';
 
 			// Create API instance
 			const usersApi = new platformClient.UsersApi();
