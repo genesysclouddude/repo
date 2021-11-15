@@ -26,6 +26,7 @@
 				  })
 				  .then((userMe) => {
 					// Handle successful result
+					var name = ${userMe.name};
 					console.log(`User name: ${userMe.name}!`);
 					console.log(`User email: ${userMe.email}`);
 					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
@@ -35,15 +36,7 @@
 					console.log(err);
 				  });
 				  
-				  
-			// Make request to GET /api/v2/users/me?expand=presence
-
-					console.log("getting ME");
-					usersApi.getUsersMe().then(function(userObject){
-						console.log("got me");
-						console.log(userObject);
-						console.log("done");
-					});
+});
         
     </script>    
 
@@ -54,7 +47,7 @@
 <p id="demo"></p>
 
 <script>
-document.getElementById("demo").innerHTML = userMe.presence.presenceDefinition.systemPresence;
+document.getElementById("demo").innerHTML = userMe.name;
 </script>
 
 <button type="button" onclick="">Create IXN</button>
