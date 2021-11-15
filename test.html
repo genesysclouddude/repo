@@ -6,7 +6,11 @@
 
 <script>
         function MyStatus() {
-  		alert("Mein Status: "+status);
+		var users = new platformClient.UsersApi();
+		users.getUsersMe({ 'expand': ["presence"] }).then(function(userObject){
+		var test = userObject.presence.presenceDefinition.systemPresence;
+    		console.log(test);
+  		alert("Mein Status: "+test);
 	}    
 	
 	// PureCloud OAuth information
