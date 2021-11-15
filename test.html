@@ -8,50 +8,37 @@
         function MyStatus() {
 		var users = new platformClient.UsersApi();
 			users.getUsersMe({ 'expand': ["presence"] }).then(function(userObject){
-				alert("Mein Status: "+userObject.presence.presenceDefinition.systemPresence);
 				document.getElementById("demo").innerHTML = userObject.presence.presenceDefinition.systemPresence;
 			});
 		}  
 	
-	// PureCloud OAuth information
+		// GenesysCloud OAuth information
+		var platformClient = require('platformClient');
+        var client = platformClient.ApiClient.instance;
+		client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
+        var clientId = '3c7698a5-5432-467a-933a-cbc33614d76b';
+        var redirectUri = 'https://genesysclouddude.github.io/repo/test.html';
+        var state = "XXX";
+
+		// Perform Implicit Grant Authentication
+		client.loginImplicitGrant(clientId, redirectUri);
+
+		// Create API instance
+		const usersApi = new platformClient.UsersApi();
 		
-			var platformClient = require('platformClient');
-            var client = platformClient.ApiClient.instance;
-			client.setEnvironment(platformClient.PureCloudRegionHosts.eu_central_1);
-            var clientId = '3c7698a5-5432-467a-933a-cbc33614d76b';
-            var redirectUri = 'https://genesysclouddude.github.io/repo/test.html';
-            var state = 'XXX';
-
-			// Create API instance
-			const usersApi = new platformClient.UsersApi();
-
-			// Authenticate
-			client.loginImplicitGrant(clientId, redirectUri)
-				.then(() => {
-				
-			// Make request to GET /api/v2/users/me?expand=presence
-			return usersApi.getUsersMe({ 'expand': ["presence"] });
-				  })
-				  .then((userMe) => {
-					// Handle successful result
-					console.log(`User name: ${userMe.name}!`);
-					console.log(`User email: ${userMe.email}`);
-					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
-					var status = userMe.presence.presenceDefinition.systemPresence;
-					console.log("Mein Status: " +status);
-				  })
-				  .catch((err) => {
-					// Handle failure response
-					console.log(err);
-				  });
-
-			document.getElementById("demo").innerHTML = status;
+		// Make request to GET /api/v2/users/me?expand=presence
+		users.getUsersMe({ 'expand': ["presence"] }).then(function(userObject){
+				document.getElementById("demo").innerHTML = userObject.presence.presenceDefinition.systemPresence;
+		});
+	
 </script>    
 
 
 <body>
-<h2>My Presence Status: </h2>
+<h2>Current Chat Capacity :</h2>
+
 <p id="demo"></p>
+
 
 <button type="button" onclick="MyStatus()">Status</button>
 
