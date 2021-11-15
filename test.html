@@ -26,7 +26,6 @@
 				  })
 				  .then((userMe) => {
 					// Handle successful result
-					var name = ${userMe.name};
 					console.log(`User name: ${userMe.name}!`);
 					console.log(`User email: ${userMe.email}`);
 					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
@@ -47,7 +46,7 @@
 <p id="demo"></p>
 
 <script>
-document.getElementById("demo").innerHTML = userMe.name;
+document.getElementById("demo").innerHTML = usersApi.userMe.presence.presenceDefinition.systemPresence;
 </script>
 
 <button type="button" onclick="">Create IXN</button>
