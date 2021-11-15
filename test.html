@@ -35,10 +35,9 @@
 					// Handle failure response
 					console.log(err);
 				  });
-				  
 
-        
-    </script>    
+	var agents = userMe.presence.presenceDefinition.systemPresence;
+</script>    
 
 
 <body>
@@ -47,7 +46,7 @@
 <p id="demo"></p>
 
 <script>
-document.getElementById("demo").innerHTML = userMe.presence.presenceDefinition.systemPresence;
+document.getElementById("demo").innerHTML = agents;
 </script>
 
 <button type="button" onclick="">Create IXN</button>
