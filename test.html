@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 
 <html>
-<body>
-
-
 <script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
-
 <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.0.0/purecloud-client-app-sdk-e9989de7.min.js"></script>
 
 <script>
@@ -30,6 +26,7 @@
 				  })
 				  .then((userMe) => {
 					// Handle successful result
+					var name = ${userMe.name};
 					console.log(`User name: ${userMe.name}!`);
 					console.log(`User email: ${userMe.email}`);
 					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
@@ -38,11 +35,33 @@
 					// Handle failure response
 					console.log(err);
 				  });
+				  
+				  
+			// Make request to GET /api/v2/users/me?expand=presence
+					var users = new platformClient.UsersApi();
+					console.log("getting ME");
+					users.getUsersMe().then(function(userObject){
+						console.log("got me");
+						console.log(userObject);
+						console.log("done");
+});
         
     </script>    
 
 
-<h1>My First Heading</h1>
+<body>
+<h2>Current Chat Capacity :</h2>
+
+<p id="demo"></p>
+
+<script>
+document.getElementById("demo").innerHTML = agents;
+</script>
+
+<button type="button" onclick="">Create IXN</button>
+
+
+</body>
 
 
 </body>
