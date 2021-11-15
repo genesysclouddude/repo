@@ -29,13 +29,14 @@
 					console.log(`User name: ${userMe.name}!`);
 					console.log(`User email: ${userMe.email}`);
 					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
+					var name = ${userMe.presence.presenceDefinition.systemPresence};
 				  })
 				  .catch((err) => {
 					// Handle failure response
 					console.log(err);
 				  });
 				  
-});
+
         
     </script>    
 
@@ -46,7 +47,7 @@
 <p id="demo"></p>
 
 <script>
-document.getElementById("demo").innerHTML = usersApi.userMe.presence.presenceDefinition.systemPresence;
+document.getElementById("demo").innerHTML = name;
 </script>
 
 <button type="button" onclick="">Create IXN</button>
