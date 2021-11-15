@@ -29,7 +29,8 @@
 					console.log(`User name: ${userMe.name}!`);
 					console.log(`User email: ${userMe.email}`);
 					console.log(`User presence: ${userMe.presence.presenceDefinition.systemPresence}`);
-					var agents = userMe.presence.presenceDefinition.systemPresence;
+					var status = userMe.presence.presenceDefinition.systemPresence;
+					console.log("Mein Status: " +status);
 				  })
 				  .catch((err) => {
 					// Handle failure response
@@ -46,7 +47,7 @@
 <p id="demo"></p>
 
 <script>
-document.getElementById("demo").innerHTML = agents;
+document.getElementById("demo").innerHTML = status;
 </script>
 
 <button type="button" onclick="">Create IXN</button>
