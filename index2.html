@@ -1,1 +1,255 @@
+<head>
 
+  <script
+
+    type="module"
+
+    src="https://auvious.video/widget/dist/auvious/auvious.esm.js"
+
+  ></script>
+
+
+
+  <script
+
+    nomodule=""
+
+    src="https://auvious.video/widget/dist/auvious/auvious.js"
+
+  ></script>
+
+
+
+  <style>
+
+    img {
+
+      cursor: pointer;
+
+    }
+
+    .big-button {
+
+      background-color: maroon;
+
+      color: white;
+
+      font-size: 3em;
+
+      padding: 10px 20px;
+
+      border-radius: 5px;
+
+      border: 0;
+
+    }
+
+    .contact_cs {
+
+      width: 40%;
+
+      height: 40%;
+
+      display: block;
+
+      margin-left: auto;
+
+      margin-right: auto;
+
+      margin-top: 15%;
+
+      margin-bottom: auto;
+
+    }
+
+
+
+    h1 {
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 48;
+
+    }
+    h2 {
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 36;
+    }
+
+  </style>
+
+</head>
+
+
+
+<body TEXT="#D2051E" font-family: Arial, Helvetica, sans-serif; font-size: 48>
+
+  <!-- Add your site or application content here -->
+
+  <center>
+    <P>
+      <br>
+      <br>
+      <br>
+      <br>
+      <H1>Clicca sull'icona qui sotto per parlare <br> subito con un operatore del Servizio Clienti</H1>
+    </P>
+      <!-- 
+
+    <div>
+
+      <button class="big-button" onclick="start()">Start video call</button>
+
+    </div>
+
+-->
+
+    <img
+
+      src="./contact_your_cs.svg"
+
+      class="contact_cs"
+
+      onclick="start()"
+
+      title="Start video to customer service"
+
+    />
+
+
+
+    <h2 id="message"></h2>
+
+  </center>
+
+
+
+  <app-auvious-widget
+
+    id="widget"
+
+    style="display: none"
+    
+    chat-mode="genesys-web-messaging"
+
+    pc-environment="mypurecloud.de"
+
+    pc-deployment-id="21e44503-95bc-4c6b-9cb8-310d55e0258b"
+
+    pc-organization-id="59819209-fd23-4a97-b3ef-8f15d4f26b21"
+
+    application-id="eb47acd2-45dc-462a-94e0-cfe15b402cb1"
+
+    customer-display-name="Hilti store kiosk - Monza"
+
+    wait-for-greeting-seconds="-1"
+
+    kiosk-mode="true"
+
+    locale="en-US"
+
+  ></app-auvious-widget>
+
+
+
+  <script>
+
+    async function start() {
+
+      document.getElementById("message").innerHTML = "Connecting...";
+
+      const widget = this.getWidget();
+
+
+
+      await widget.setCustomerMetadata({
+
+        // set your own key-value pairs here
+
+        // key1: "value1",
+
+        // key2: "value2",
+
+      });
+
+      widget.launch("video");
+
+    }
+
+
+
+    (async () => {
+
+      await customElements.whenDefined("app-auvious-widget");
+
+      const widget = this.getWidget();
+
+
+
+      widget.addEventListener("conversationStarted", () => {
+
+        document.getElementById("message").innerHTML =
+
+          "Please wait for the next available agent...";
+
+      });
+
+
+
+      widget.addEventListener("agentConnected", () => {
+
+        document.getElementById("message").innerHTML =
+
+          "Agent connected. Please wait for the call to start...";
+
+      });
+
+
+
+      widget.addEventListener("callStarting", () => {
+
+        document.getElementById("message").innerHTML = "";
+
+        const widget = this.getWidget();
+
+        widget.setAttribute("style", "display: block");
+
+      });
+
+
+
+      widget.addEventListener("conversationEnded", () => {
+
+        const widget = this.getWidget();
+
+        widget.setAttribute("style", "display: none");
+
+        document.getElementById("message").innerHTML =
+
+          "Thank you for contacting us";
+
+        setTimeout(() => {
+
+          document.getElementById("message").innerHTML = "";
+
+        }, 3000);
+
+      });
+
+    })();
+
+
+
+    function getWidget() {
+
+      return document.getElementById("widget");
+
+    }
+
+  </script>
+
+
+<p><a href="file:///C:/Users/timok/Desktop/index.html">Link</a></p>
+
+
+</body>
